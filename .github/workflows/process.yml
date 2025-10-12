@@ -1,0 +1,94 @@
+name: Process Iconsets
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Runs every Saturday at 00:00 EST (05:00 UTC)
+    - cron: '0 5 * * 6'
+
+jobs:
+  process-icons:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+
+      - name: Install Rokit
+        run: |
+          curl -sSf https://raw.githubusercontent.com/rojo-rbx/rokit/main/scripts/install.sh | bash
+          echo "$HOME/.rokit/bin" >> $GITHUB_PATH
+
+      - name: Trust Rokit Tools
+        run: |
+          rokit trust lune-org/lune
+          rokit trust Sleitnick/rbxcloud
+
+      - name: Install Rokit Tools
+        run: rokit install
+
+      - name: Install resvg
+        run: cargo install resvg
+
+      - name: Install alpha-bleed
+        run: cargo install --git https://github.com/EgoMoose/alpha-bleed
+
+      - name: Install oxipng
+        run: cargo install oxipng
+
+      - name: Download TexturePacker
+        run: |
+          wget https://libgdx-nightlies.s3.amazonaws.com/libgdx-runnables/runnable-texturepacker.jar
+          chmod +x runnable-texturepacker.jar
+
+      - name: Run Astralis Script
+        env:
+          RBLX_API_KEY: ${{ secrets.RBLX_API_KEY }}
+          HOLDER_USER_ID: ${{ secrets.HOLDER_USER_ID }}
+        run: lune run astralis.luau
+
+      - name: Cleanup TexturePacker
+        run: |
+          echo "Cleaning up TexturePacker..."
+          rm -f runnable-texturepacker.jar
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'ci: update iconset metadata'
+          committer: GitHub Actions <actions@github.com>
+          author: GitHub Actions <actions@github.com>
+          branch: iconset-update-${{ github.run_number }}
+          delete-branch: true
+          title: 'ci: update iconset metadata'
+          body: |
+            This PR updates iconset metadata and associated assets.
+
+            **Summary**
+            - Updated icon metadata and spritesheets
+            - Synced asset data with Roblox
+
+            _Generated automatically by the Astralis CI workflow._
+            
+            [Run #${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+          labels: |
+            automated
+            iconsets
+          draft: false

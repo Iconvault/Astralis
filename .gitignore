@@ -1,0 +1,8 @@
+# Ignore development resources
+.luaurc
+selene.toml
+
+# Ignore folders, made during conversion
+png/
+svg/
+spritesheets/
