@@ -124,7 +124,7 @@ local config: Config = {
 	packedRes = 1024, -- Spritesheet resolution (1024x1024)
 	iconRes = 128, -- Individual icon resolution (128x128)
 	defaultColor = "#FFFFFF", -- White base for runtime recoloring
-	iconsets = { "duo-icons", "weui" },
+	iconsets = { "tabler", "majesticons" },
 	
 	-- Step conditions: Enable/disable specific pipeline steps
 	conditions = {
