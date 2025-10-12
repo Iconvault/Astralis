@@ -9,11 +9,10 @@ on:
 jobs:
   process-icons:
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 180
 
     permissions:
       contents: write
-      pull-requests: write
 
     steps:
       - name: Checkout Repository
@@ -68,27 +67,23 @@ jobs:
           echo "Cleaning up TexturePacker..."
           rm -f runnable-texturepacker.jar
 
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v6
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: 'ci: update iconset metadata'
-          committer: GitHub Actions <actions@github.com>
-          author: GitHub Actions <actions@github.com>
-          branch: iconset-update-${{ github.run_number }}
-          delete-branch: true
-          title: 'ci: update iconset metadata'
-          body: |
-            This PR updates iconset metadata and associated assets.
+      - name: Wait 10 minutes (scheduled runs only)
+        if: github.event_name == 'schedule'
+        run: |
+          echo "Waiting 15 minutes before pushing to main... (Moderation purposes)"
+          sleep 900
 
-            **Summary**
-            - Updated icon metadata and spritesheets
-            - Synced asset data with Roblox
+      - name: Configure Git
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
 
-            _Generated automatically by the Astralis CI workflow._
-            
-            [Run #${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-          labels: |
-            automated
-            iconsets
-          draft: false
+      - name: Commit and Push Changes
+        run: |
+          git add -A
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "ci: update iconset metadata"
+            git push origin main
+          fi
