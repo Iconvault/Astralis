@@ -474,5 +474,836 @@
       "clapperboard",
       "message-2"
     ]
+  },
+  "weui": {
+    "author": "WeUI",
+    "iconCount": 162,
+    "icons": {
+      "add-filled": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 0,
+        "yOffset": 0
+      },
+      "add-friends-filled": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 128,
+        "yOffset": 0
+      },
+      "add-friends-outlined": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 256,
+        "yOffset": 0
+      },
+      "add-outlined": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 384,
+        "yOffset": 0
+      },
+      "add2-filled": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 512,
+        "yOffset": 0
+      },
+      "add2-outlined": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 640,
+        "yOffset": 0
+      },
+      "album-filled": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 768,
+        "yOffset": 0
+      },
+      "album-outlined": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 896,
+        "yOffset": 0
+      },
+      "arrow-filled": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 0,
+        "yOffset": 128
+      },
+      "arrow-outlined": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 128,
+        "yOffset": 128
+      },
+      "at-filled": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 256,
+        "yOffset": 128
+      },
+      "at-outlined": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 384,
+        "yOffset": 128
+      },
+      "back-filled": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 512,
+        "yOffset": 128
+      },
+      "back-outlined": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 640,
+        "yOffset": 128
+      },
+      "back2-filled": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 768,
+        "yOffset": 128
+      },
+      "back2-outlined": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 896,
+        "yOffset": 128
+      },
+      "bellring-off-filled": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 0,
+        "yOffset": 256
+      },
+      "bellring-off-outlined": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 128,
+        "yOffset": 256
+      },
+      "bellring-on-filled": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 256,
+        "yOffset": 256
+      },
+      "bellring-on-outlined": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 384,
+        "yOffset": 256
+      },
+      "camera-filled": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 512,
+        "yOffset": 256
+      },
+      "camera-outlined": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 640,
+        "yOffset": 256
+      },
+      "cellphone-filled": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 768,
+        "yOffset": 256
+      },
+      "cellphone-outlined": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 896,
+        "yOffset": 256
+      },
+      "clip-filled": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 0,
+        "yOffset": 384
+      },
+      "clip-outlined": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 128,
+        "yOffset": 384
+      },
+      "close-filled": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 256,
+        "yOffset": 384
+      },
+      "close-outlined": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 384,
+        "yOffset": 384
+      },
+      "close2-filled": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 512,
+        "yOffset": 384
+      },
+      "close2-outlined": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 640,
+        "yOffset": 384
+      },
+      "comment-filled": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 768,
+        "yOffset": 384
+      },
+      "comment-outlined": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 896,
+        "yOffset": 384
+      },
+      "contacts-filled": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 0,
+        "yOffset": 512
+      },
+      "contacts-outlined": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 128,
+        "yOffset": 512
+      },
+      "copy-filled": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 256,
+        "yOffset": 512
+      },
+      "copy-outlined": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 384,
+        "yOffset": 512
+      },
+      "delete-filled": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 512,
+        "yOffset": 512
+      },
+      "delete-on-filled": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 640,
+        "yOffset": 512
+      },
+      "delete-on-outlined": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 768,
+        "yOffset": 512
+      },
+      "delete-outlined": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 896,
+        "yOffset": 512
+      },
+      "discover-filled": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 0,
+        "yOffset": 640
+      },
+      "discover-outlined": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 128,
+        "yOffset": 640
+      },
+      "display-filled": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 256,
+        "yOffset": 640
+      },
+      "display-outlined": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 384,
+        "yOffset": 640
+      },
+      "done-filled": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 512,
+        "yOffset": 640
+      },
+      "done-outlined": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 640,
+        "yOffset": 640
+      },
+      "done2-filled": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 768,
+        "yOffset": 640
+      },
+      "done2-outlined": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 896,
+        "yOffset": 640
+      },
+      "download-filled": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 0,
+        "yOffset": 768
+      },
+      "download-outlined": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 128,
+        "yOffset": 768
+      },
+      "email-filled": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 256,
+        "yOffset": 768
+      },
+      "email-outlined": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 384,
+        "yOffset": 768
+      },
+      "error-filled": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 512,
+        "yOffset": 768
+      },
+      "error-outlined": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 640,
+        "yOffset": 768
+      },
+      "eyes-off-filled": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 768,
+        "yOffset": 768
+      },
+      "eyes-off-outlined": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 896,
+        "yOffset": 768
+      },
+      "eyes-on-filled": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 0,
+        "yOffset": 896
+      },
+      "eyes-on-outlined": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 128,
+        "yOffset": 896
+      },
+      "folder-filled": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 256,
+        "yOffset": 896
+      },
+      "folder-outlined": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 384,
+        "yOffset": 896
+      },
+      "group-detail-filled": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 512,
+        "yOffset": 896
+      },
+      "group-detail-outlined": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 640,
+        "yOffset": 896
+      },
+      "help-filled": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 768,
+        "yOffset": 896
+      },
+      "help-outlined": {
+        "decalId": "rbxassetid://100384418263975",
+        "xOffset": 896,
+        "yOffset": 896
+      },
+      "home-filled": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 0,
+        "yOffset": 0
+      },
+      "home-outlined": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 128,
+        "yOffset": 0
+      },
+      "imac-filled": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 256,
+        "yOffset": 0
+      },
+      "imac-outlined": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 384,
+        "yOffset": 0
+      },
+      "info-filled": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 512,
+        "yOffset": 0
+      },
+      "info-outlined": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 640,
+        "yOffset": 0
+      },
+      "keyboard-filled": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 768,
+        "yOffset": 0
+      },
+      "keyboard-outlined": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 896,
+        "yOffset": 0
+      },
+      "like-filled": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 0,
+        "yOffset": 128
+      },
+      "like-outlined": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 128,
+        "yOffset": 128
+      },
+      "link-filled": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 256,
+        "yOffset": 128
+      },
+      "link-outlined": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 384,
+        "yOffset": 128
+      },
+      "location-filled": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 512,
+        "yOffset": 128
+      },
+      "location-outlined": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 640,
+        "yOffset": 128
+      },
+      "lock-filled": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 768,
+        "yOffset": 128
+      },
+      "lock-outlined": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 896,
+        "yOffset": 128
+      },
+      "max-window-filled": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 0,
+        "yOffset": 256
+      },
+      "max-window-outlined": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 128,
+        "yOffset": 256
+      },
+      "me-filled": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 256,
+        "yOffset": 256
+      },
+      "me-outlined": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 384,
+        "yOffset": 256
+      },
+      "mike-filled": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 512,
+        "yOffset": 256
+      },
+      "mike-outlined": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 640,
+        "yOffset": 256
+      },
+      "mike2-filled": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 768,
+        "yOffset": 256
+      },
+      "mike2-outlined": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 896,
+        "yOffset": 256
+      },
+      "mobile-contacts-filled": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 0,
+        "yOffset": 384
+      },
+      "mobile-contacts-outlined": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 128,
+        "yOffset": 384
+      },
+      "more-filled": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 256,
+        "yOffset": 384
+      },
+      "more-outlined": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 384,
+        "yOffset": 384
+      },
+      "more2-filled": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 512,
+        "yOffset": 384
+      },
+      "more2-outlined": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 640,
+        "yOffset": 384
+      },
+      "mosaic-filled": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 768,
+        "yOffset": 384
+      },
+      "mosaic-outlined": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 896,
+        "yOffset": 384
+      },
+      "music-filled": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 0,
+        "yOffset": 512
+      },
+      "music-off-filled": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 128,
+        "yOffset": 512
+      },
+      "music-off-outlined": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 256,
+        "yOffset": 512
+      },
+      "music-outlined": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 384,
+        "yOffset": 512
+      },
+      "note-filled": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 512,
+        "yOffset": 512
+      },
+      "note-outlined": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 640,
+        "yOffset": 512
+      },
+      "pad-filled": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 768,
+        "yOffset": 512
+      },
+      "pad-outlined": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 896,
+        "yOffset": 512
+      },
+      "pause-filled": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 0,
+        "yOffset": 640
+      },
+      "pause-outlined": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 128,
+        "yOffset": 640
+      },
+      "pencil-filled": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 256,
+        "yOffset": 640
+      },
+      "pencil-outlined": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 384,
+        "yOffset": 640
+      },
+      "photo-wall-filled": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 512,
+        "yOffset": 640
+      },
+      "photo-wall-outlined": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 640,
+        "yOffset": 640
+      },
+      "play-filled": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 768,
+        "yOffset": 640
+      },
+      "play-outlined": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 896,
+        "yOffset": 640
+      },
+      "play2-filled": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 0,
+        "yOffset": 768
+      },
+      "play2-outlined": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 128,
+        "yOffset": 768
+      },
+      "previous-filled": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 256,
+        "yOffset": 768
+      },
+      "previous-outlined": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 384,
+        "yOffset": 768
+      },
+      "previous2-filled": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 512,
+        "yOffset": 768
+      },
+      "previous2-outlined": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 640,
+        "yOffset": 768
+      },
+      "qr-code-filled": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 768,
+        "yOffset": 768
+      },
+      "qr-code-outlined": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 896,
+        "yOffset": 768
+      },
+      "refresh-filled": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 0,
+        "yOffset": 896
+      },
+      "refresh-outlined": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 128,
+        "yOffset": 896
+      },
+      "report-problem-filled": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 256,
+        "yOffset": 896
+      },
+      "report-problem-outlined": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 384,
+        "yOffset": 896
+      },
+      "search-filled": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 512,
+        "yOffset": 896
+      },
+      "search-outlined": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 640,
+        "yOffset": 896
+      },
+      "sending-filled": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 768,
+        "yOffset": 896
+      },
+      "sending-outlined": {
+        "decalId": "rbxassetid://118586351279985",
+        "xOffset": 896,
+        "yOffset": 896
+      },
+      "setting-filled": {
+        "decalId": "rbxassetid://94299937847881",
+        "xOffset": 0,
+        "yOffset": 0
+      },
+      "setting-outlined": {
+        "decalId": "rbxassetid://94299937847881",
+        "xOffset": 128,
+        "yOffset": 0
+      },
+      "share-filled": {
+        "decalId": "rbxassetid://94299937847881",
+        "xOffset": 256,
+        "yOffset": 0
+      },
+      "share-outlined": {
+        "decalId": "rbxassetid://94299937847881",
+        "xOffset": 384,
+        "yOffset": 0
+      },
+      "shop-filled": {
+        "decalId": "rbxassetid://94299937847881",
+        "xOffset": 512,
+        "yOffset": 0
+      },
+      "shop-outlined": {
+        "decalId": "rbxassetid://94299937847881",
+        "xOffset": 640,
+        "yOffset": 0
+      },
+      "star-filled": {
+        "decalId": "rbxassetid://94299937847881",
+        "xOffset": 768,
+        "yOffset": 0
+      },
+      "star-outlined": {
+        "decalId": "rbxassetid://94299937847881",
+        "xOffset": 896,
+        "yOffset": 0
+      },
+      "sticker-filled": {
+        "decalId": "rbxassetid://94299937847881",
+        "xOffset": 0,
+        "yOffset": 128
+      },
+      "sticker-outlined": {
+        "decalId": "rbxassetid://94299937847881",
+        "xOffset": 128,
+        "yOffset": 128
+      },
+      "tag-filled": {
+        "decalId": "rbxassetid://94299937847881",
+        "xOffset": 256,
+        "yOffset": 128
+      },
+      "tag-outlined": {
+        "decalId": "rbxassetid://94299937847881",
+        "xOffset": 384,
+        "yOffset": 128
+      },
+      "text-filled": {
+        "decalId": "rbxassetid://94299937847881",
+        "xOffset": 512,
+        "yOffset": 128
+      },
+      "text-outlined": {
+        "decalId": "rbxassetid://94299937847881",
+        "xOffset": 640,
+        "yOffset": 128
+      },
+      "time-filled": {
+        "decalId": "rbxassetid://94299937847881",
+        "xOffset": 768,
+        "yOffset": 128
+      },
+      "time-outlined": {
+        "decalId": "rbxassetid://94299937847881",
+        "xOffset": 896,
+        "yOffset": 128
+      },
+      "transfer-filled": {
+        "decalId": "rbxassetid://94299937847881",
+        "xOffset": 0,
+        "yOffset": 256
+      },
+      "transfer-outlined": {
+        "decalId": "rbxassetid://94299937847881",
+        "xOffset": 128,
+        "yOffset": 256
+      },
+      "transfer-text-filled": {
+        "decalId": "rbxassetid://94299937847881",
+        "xOffset": 256,
+        "yOffset": 256
+      },
+      "transfer-text-outlined": {
+        "decalId": "rbxassetid://94299937847881",
+        "xOffset": 384,
+        "yOffset": 256
+      },
+      "transfer2-filled": {
+        "decalId": "rbxassetid://94299937847881",
+        "xOffset": 512,
+        "yOffset": 256
+      },
+      "transfer2-outlined": {
+        "decalId": "rbxassetid://94299937847881",
+        "xOffset": 640,
+        "yOffset": 256
+      },
+      "tv-filled": {
+        "decalId": "rbxassetid://94299937847881",
+        "xOffset": 768,
+        "yOffset": 256
+      },
+      "tv-outlined": {
+        "decalId": "rbxassetid://94299937847881",
+        "xOffset": 896,
+        "yOffset": 256
+      },
+      "video-call-filled": {
+        "decalId": "rbxassetid://94299937847881",
+        "xOffset": 0,
+        "yOffset": 384
+      },
+      "video-call-outlined": {
+        "decalId": "rbxassetid://94299937847881",
+        "xOffset": 128,
+        "yOffset": 384
+      },
+      "voice-filled": {
+        "decalId": "rbxassetid://94299937847881",
+        "xOffset": 256,
+        "yOffset": 384
+      },
+      "voice-outlined": {
+        "decalId": "rbxassetid://94299937847881",
+        "xOffset": 384,
+        "yOffset": 384
+      },
+      "volume-down-filled": {
+        "decalId": "rbxassetid://94299937847881",
+        "xOffset": 512,
+        "yOffset": 384
+      },
+      "volume-down-outlined": {
+        "decalId": "rbxassetid://94299937847881",
+        "xOffset": 640,
+        "yOffset": 384
+      },
+      "volume-off-filled": {
+        "decalId": "rbxassetid://94299937847881",
+        "xOffset": 768,
+        "yOffset": 384
+      },
+      "volume-off-outlined": {
+        "decalId": "rbxassetid://94299937847881",
+        "xOffset": 896,
+        "yOffset": 384
+      },
+      "volume-up-filled": {
+        "decalId": "rbxassetid://94299937847881",
+        "xOffset": 0,
+        "yOffset": 512
+      },
+      "volume-up-outlined": {
+        "decalId": "rbxassetid://94299937847881",
+        "xOffset": 128,
+        "yOffset": 512
+      }
+    },
+    "lastRefreshed": 1760281789,
+    "lastUpdated": 1754901571,
+    "license": {
+      "name": "MIT",
+      "spdx": "MIT"
+    },
+    "name": "WeUI Icon",
+    "samples": [
+      "search-outlined",
+      "clip-filled",
+      "done-filled",
+      "more-filled",
+      "arrow-filled",
+      "play-outlined"
+    ]
   }
 }
