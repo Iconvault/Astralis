@@ -75,20 +75,30 @@ jobs:
           HOLDER_USER_ID: ${{ secrets.HOLDER_USER_ID }}
         run: lune run astralis.luau
 
+      - name: Cleanup TexturePacker
+        run: |
+          echo "Cleaning up TexturePacker..."
+          rm -f runnable-texturepacker.jar
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: 'ci: Update Iconset Metadata'
+          commit-message: 'ci: update iconset metadata'
           committer: GitHub Actions <actions@github.com>
           author: GitHub Actions <actions@github.com>
           branch: iconset-update-${{ github.run_number }}
           delete-branch: true
-          title: 'ci: Update Iconset Metadata'
+          title: 'ci: update iconset metadata'
           body: |
             This PR updates iconset metadata and associated assets.
 
+            **Summary**
+            - Updated icon metadata and spritesheets
+            - Synced asset data with Roblox
+
             _Generated automatically by the Astralis CI workflow._
+            
             [Run #${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
           labels: |
             automated
