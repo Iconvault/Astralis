@@ -1,10 +1,9 @@
 # Astralis 🌠
 Astralis is a [Lune](https://github.com/Iconvault/Astralis) script that automates the process of fetching, rasterizing, packing, and uploading [Iconify](https://github.com/iconify/iconify) icon sets to Roblox as optimized sprite atlases.
 
-It also powers **Iconvault**, providing users with thousands of high-quality icons. It’s also built to ensure you always have access to the latest icon sets, without any plugin updates required.
+It also powers **Iconvault**, providing users with thousands of high-quality icons. Astralis is purpose-built to ensure you always have access to the latest icon sets, without any plugin updates required.
 
 > Iconvault is coming soon. Stay tuned! 🤫
-
 ## ⚙️ What Astralis Does
 1. Fetches the latest icon data from Iconify’s GitHub repository  
 2. Generates normalized SVGs
