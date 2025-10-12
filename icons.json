@@ -1,0 +1,478 @@
+{
+  "duo-icons": {
+    "author": "fernandcf",
+    "iconCount": 91,
+    "icons": {
+      "add-circle": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 0,
+        "yOffset": 0
+      },
+      "airplay": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 128,
+        "yOffset": 0
+      },
+      "alert-octagon": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 256,
+        "yOffset": 0
+      },
+      "alert-triangle": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 384,
+        "yOffset": 0
+      },
+      "align-bottom": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 512,
+        "yOffset": 0
+      },
+      "align-center": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 640,
+        "yOffset": 0
+      },
+      "android": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 768,
+        "yOffset": 0
+      },
+      "app": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 896,
+        "yOffset": 0
+      },
+      "app-dots": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 0,
+        "yOffset": 128
+      },
+      "apple": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 128,
+        "yOffset": 128
+      },
+      "approved": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 256,
+        "yOffset": 128
+      },
+      "appstore": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 384,
+        "yOffset": 128
+      },
+      "award": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 512,
+        "yOffset": 128
+      },
+      "baby-carriage": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 640,
+        "yOffset": 128
+      },
+      "bank": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 768,
+        "yOffset": 128
+      },
+      "battery": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 896,
+        "yOffset": 128
+      },
+      "bell": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 0,
+        "yOffset": 256
+      },
+      "bell-badge": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 128,
+        "yOffset": 256
+      },
+      "book": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 256,
+        "yOffset": 256
+      },
+      "book-2": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 384,
+        "yOffset": 256
+      },
+      "book-3": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 512,
+        "yOffset": 256
+      },
+      "bookmark": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 640,
+        "yOffset": 256
+      },
+      "box": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 768,
+        "yOffset": 256
+      },
+      "box-2": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 896,
+        "yOffset": 256
+      },
+      "bread": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 0,
+        "yOffset": 384
+      },
+      "bridge": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 128,
+        "yOffset": 384
+      },
+      "briefcase": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 256,
+        "yOffset": 384
+      },
+      "brush": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 384,
+        "yOffset": 384
+      },
+      "brush-2": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 512,
+        "yOffset": 384
+      },
+      "bug": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 640,
+        "yOffset": 384
+      },
+      "building": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 768,
+        "yOffset": 384
+      },
+      "bus": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 896,
+        "yOffset": 384
+      },
+      "cake": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 0,
+        "yOffset": 512
+      },
+      "calendar": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 128,
+        "yOffset": 512
+      },
+      "camera": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 256,
+        "yOffset": 512
+      },
+      "camera-square": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 384,
+        "yOffset": 512
+      },
+      "campground": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 512,
+        "yOffset": 512
+      },
+      "candle": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 640,
+        "yOffset": 512
+      },
+      "car": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 768,
+        "yOffset": 512
+      },
+      "certificate": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 896,
+        "yOffset": 512
+      },
+      "chart-pie": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 0,
+        "yOffset": 640
+      },
+      "check-circle": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 128,
+        "yOffset": 640
+      },
+      "chip": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 256,
+        "yOffset": 640
+      },
+      "clapperboard": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 384,
+        "yOffset": 640
+      },
+      "clipboard": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 512,
+        "yOffset": 640
+      },
+      "clock": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 640,
+        "yOffset": 640
+      },
+      "cloud-lightning": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 768,
+        "yOffset": 640
+      },
+      "cloud-snow": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 896,
+        "yOffset": 640
+      },
+      "coin-stack": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 0,
+        "yOffset": 768
+      },
+      "compass": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 128,
+        "yOffset": 768
+      },
+      "computer-camera": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 256,
+        "yOffset": 768
+      },
+      "computer-camera-off": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 384,
+        "yOffset": 768
+      },
+      "confetti": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 512,
+        "yOffset": 768
+      },
+      "credit-card": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 640,
+        "yOffset": 768
+      },
+      "currency-euro": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 768,
+        "yOffset": 768
+      },
+      "dashboard": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 896,
+        "yOffset": 768
+      },
+      "discount": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 0,
+        "yOffset": 896
+      },
+      "disk": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 128,
+        "yOffset": 896
+      },
+      "file": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 256,
+        "yOffset": 896
+      },
+      "fire": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 384,
+        "yOffset": 896
+      },
+      "folder-open": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 512,
+        "yOffset": 896
+      },
+      "folder-upload": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 640,
+        "yOffset": 896
+      },
+      "g-translate": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 768,
+        "yOffset": 896
+      },
+      "id-card": {
+        "decalId": "rbxassetid://103487366180211",
+        "xOffset": 896,
+        "yOffset": 896
+      },
+      "info": {
+        "decalId": "rbxassetid://119263850047697",
+        "xOffset": 0,
+        "yOffset": 0
+      },
+      "lamp": {
+        "decalId": "rbxassetid://119263850047697",
+        "xOffset": 128,
+        "yOffset": 0
+      },
+      "lamp-2": {
+        "decalId": "rbxassetid://119263850047697",
+        "xOffset": 256,
+        "yOffset": 0
+      },
+      "location": {
+        "decalId": "rbxassetid://119263850047697",
+        "xOffset": 384,
+        "yOffset": 0
+      },
+      "marker": {
+        "decalId": "rbxassetid://119263850047697",
+        "xOffset": 512,
+        "yOffset": 0
+      },
+      "menu": {
+        "decalId": "rbxassetid://119263850047697",
+        "xOffset": 640,
+        "yOffset": 0
+      },
+      "message": {
+        "decalId": "rbxassetid://119263850047697",
+        "xOffset": 768,
+        "yOffset": 0
+      },
+      "message-2": {
+        "decalId": "rbxassetid://119263850047697",
+        "xOffset": 896,
+        "yOffset": 0
+      },
+      "message-3": {
+        "decalId": "rbxassetid://119263850047697",
+        "xOffset": 0,
+        "yOffset": 128
+      },
+      "moon-2": {
+        "decalId": "rbxassetid://119263850047697",
+        "xOffset": 128,
+        "yOffset": 128
+      },
+      "moon-stars": {
+        "decalId": "rbxassetid://119263850047697",
+        "xOffset": 256,
+        "yOffset": 128
+      },
+      "palette": {
+        "decalId": "rbxassetid://119263850047697",
+        "xOffset": 384,
+        "yOffset": 128
+      },
+      "rocket": {
+        "decalId": "rbxassetid://119263850047697",
+        "xOffset": 512,
+        "yOffset": 128
+      },
+      "settings": {
+        "decalId": "rbxassetid://119263850047697",
+        "xOffset": 640,
+        "yOffset": 128
+      },
+      "shopping-bag": {
+        "decalId": "rbxassetid://119263850047697",
+        "xOffset": 768,
+        "yOffset": 128
+      },
+      "slideshow": {
+        "decalId": "rbxassetid://119263850047697",
+        "xOffset": 896,
+        "yOffset": 128
+      },
+      "smartphone": {
+        "decalId": "rbxassetid://119263850047697",
+        "xOffset": 0,
+        "yOffset": 256
+      },
+      "smartphone-vibration": {
+        "decalId": "rbxassetid://119263850047697",
+        "xOffset": 128,
+        "yOffset": 256
+      },
+      "smartwatch": {
+        "decalId": "rbxassetid://119263850047697",
+        "xOffset": 256,
+        "yOffset": 256
+      },
+      "sun": {
+        "decalId": "rbxassetid://119263850047697",
+        "xOffset": 384,
+        "yOffset": 256
+      },
+      "target": {
+        "decalId": "rbxassetid://119263850047697",
+        "xOffset": 512,
+        "yOffset": 256
+      },
+      "toggle": {
+        "decalId": "rbxassetid://119263850047697",
+        "xOffset": 640,
+        "yOffset": 256
+      },
+      "translation": {
+        "decalId": "rbxassetid://119263850047697",
+        "xOffset": 768,
+        "yOffset": 256
+      },
+      "upload-file": {
+        "decalId": "rbxassetid://119263850047697",
+        "xOffset": 896,
+        "yOffset": 256
+      },
+      "user": {
+        "decalId": "rbxassetid://119263850047697",
+        "xOffset": 0,
+        "yOffset": 384
+      },
+      "user-card": {
+        "decalId": "rbxassetid://119263850047697",
+        "xOffset": 128,
+        "yOffset": 384
+      },
+      "world": {
+        "decalId": "rbxassetid://119263850047697",
+        "xOffset": 256,
+        "yOffset": 384
+      }
+    },
+    "lastRefreshed": 1760278729,
+    "lastUpdated": 1727503587,
+    "license": {
+      "name": "MIT",
+      "spdx": "MIT"
+    },
+    "name": "Duoicons",
+    "samples": [
+      "credit-card",
+      "check-circle",
+      "box",
+      "folder-open",
+      "clapperboard",
+      "message-2"
+    ]
+  }
+}
