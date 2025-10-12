@@ -49,6 +49,11 @@ jobs:
           curl -sSf https://raw.githubusercontent.com/rojo-rbx/rokit/main/scripts/install.sh | bash
           echo "$HOME/.rokit/bin" >> $GITHUB_PATH
 
+      - name: Trust Rokit Tools
+        run: |
+          rokit trust lune-org/lune
+          rokit trust Sleitnick/rbxcloud
+
       - name: Install Rokit Tools
         run: rokit install
 
