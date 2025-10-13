@@ -65,10 +65,9 @@ type IconData = {
 	vFlip: boolean?,
 }
 
-type IconAtlasData = {
-	decalId: string,
-	xOffset: number,
-	yOffset: number,
+type IconPositionData = {
+	x: number,
+	y: number,
 }
 
 type IconsetMetadata = {
@@ -82,7 +81,7 @@ type IconsetMetadata = {
 	samples: { string },
 	lastRefreshed: number,
 	lastUpdated: number,
-	icons: { [string]: IconAtlasData | {} },
+	icons: { [string]: { [string]: IconPositionData } }, -- decalNumber -> iconName -> {x, y}
 }
 
 type ConfigConditions = {
@@ -114,28 +113,28 @@ type CompressionStats = {
 -- CONFIGURATION
 --═══════════════════════════════════════════════════════════
 local ICONSET_BASE_URL = "https://raw.githubusercontent.com/iconify/icon-sets/refs/heads/master/json/%s.json"
+local START_TIMESTAMP = os.time()
 
 -- Environment variables
 local RBLX_API_KEY = process.env.RBLX_API_KEY
 local HOLDER_USER_ID = process.env.HOLDER_USER_ID
-local START_TIMESTAMP = os.time()
 
 local config: Config = {
 	packedRes = 1024, -- Spritesheet resolution (1024x1024)
 	iconRes = 128, -- Individual icon resolution (128x128)
 	defaultColor = "#FFFFFF", -- White base for runtime recoloring
 	iconsets = { "tabler", "majesticons" },
-	
+
 	-- Step conditions: Enable/disable specific pipeline steps
 	conditions = {
-		fetchIconData = true, -- Fetch icon data from Iconify (disable if using cached data)
-		generateSVG = true, -- Generate SVG files from icon data (disable if SVGs exist)
-		convertToPNG = true, -- Convert SVG to PNG (disable if PNGs exist)
-		packSprites = true, -- Pack PNGs into sprite atlases (disable if atlases exist)
-		alphaBleed = true, -- Apply alpha-bleeding to fix transparent edges
-		compressImages = true, -- Lossless PNG optimization with oxipng
-		uploadToRoblox = true, -- Upload spritesheets to Roblox (disable for testing)
-		generateMetadata = true, -- Generate and save icons.json metadata file
+		fetchIconData = true,
+		generateSVG = true,
+		convertToPNG = true,
+		packSprites = true,
+		alphaBleed = true,
+		compressImages = true,
+		uploadToRoblox = true,
+		generateMetadata = true,
 	},
 }
 
@@ -172,12 +171,12 @@ local function fetchJson(url: string): any
 end
 
 --- Creates necessary directory structure for an iconset
-local function ensureDirectories(iconsetIndex: string)
+local function ensureDirectories(iconsetName: string)
 	local dirs = {
 		"svg",
-		`svg/{iconsetIndex}`,
+		`svg/{iconsetName}`,
 		"png",
-		`png/{iconsetIndex}`,
+		`png/{iconsetName}`,
 	}
 
 	for _, dir in dirs do
@@ -246,18 +245,10 @@ local function resolveAlias(aliasName: string, aliasData: any, iconsData: any, r
 	end
 
 	-- Override dimensions if specified
-	if aliasData.width then
-		resolved.width = aliasData.width
-	end
-	if aliasData.height then
-		resolved.height = aliasData.height
-	end
-	if aliasData.left then
-		resolved.left = aliasData.left
-	end
-	if aliasData.top then
-		resolved.top = aliasData.top
-	end
+	resolved.width = aliasData.width or resolved.width
+	resolved.height = aliasData.height or resolved.height
+	resolved.left = aliasData.left or resolved.left
+	resolved.top = aliasData.top or resolved.top
 
 	return resolved
 end
@@ -275,14 +266,14 @@ local function generateSVG(iconData: IconData, defaultColor: string): string
 end
 
 --- Writes SVG content to disk
-local function writeSVGFile(iconsetIndex: string, iconName: string, svgContent: string)
-	fs.writeFile(`svg/{iconsetIndex}/{iconName}.svg`, svgContent)
+local function writeSVGFile(iconsetName: string, iconName: string, svgContent: string)
+	fs.writeFile(`svg/{iconsetName}/{iconName}.svg`, svgContent)
 end
 
 --- Converts SVG to PNG using resvg rasterizer
-local function convertSVGtoPNG(iconsetIndex: string, iconName: string, iconRes: number): boolean
-	local svgPath = `svg/{iconsetIndex}/{iconName}.svg`
-	local pngPath = `png/{iconsetIndex}/{iconName}.png`
+local function convertSVGtoPNG(iconsetName: string, iconName: string, iconRes: number): boolean
+	local svgPath = `svg/{iconsetName}/{iconName}.svg`
+	local pngPath = `png/{iconsetName}/{iconName}.png`
 
 	local result = process.exec("resvg", {
 		"--width",
@@ -306,18 +297,18 @@ end
 --═══════════════════════════════════════════════════════════
 
 --- Creates libGDX TexturePacker configuration file
-local function createPackConfig(cfg: Config, iconsetIndex: string)
+local function createPackConfig(iconsetName: string)
 	local packConfig = {
-		pot = false, -- Don't force power-of-two
+		pot = false,
 		paddingX = 0,
 		paddingY = 0,
 		bleed = false,
 		edgePadding = false,
-		rotation = false, -- Don't rotate icons
-		minWidth = cfg.iconRes,
-		minHeight = cfg.iconRes,
-		maxWidth = cfg.packedRes,
-		maxHeight = cfg.packedRes,
+		rotation = false,
+		minWidth = config.iconRes,
+		minHeight = config.iconRes,
+		maxWidth = config.packedRes,
+		maxHeight = config.packedRes,
 		square = false,
 		stripWhitespaceX = false,
 		stripWhitespaceY = false,
@@ -344,16 +335,16 @@ local function createPackConfig(cfg: Config, iconsetIndex: string)
 		legacyOutput = false,
 	}
 
-	fs.writeFile(`png/{iconsetIndex}/pack.json`, serde.encode("json", packConfig))
+	fs.writeFile(`png/{iconsetName}/pack.json`, serde.encode("json", packConfig))
 end
 
 --- Packs PNG icons into sprite atlas using libGDX TexturePacker
-local function packIconsetSprites(iconsetIndex: string, cfg: Config): boolean
+local function packIconsetSprites(iconsetName: string): boolean
 	print(`\n{ANSI.CYAN}▸ {ANSI.BOLD}Packing Sprites{ANSI.RESET}`)
 	print(`  {ANSI.DIM}Creating sprite atlas...{ANSI.RESET}`)
 
 	-- Ensure output directory exists
-	local spritesheetPath = `spritesheets/{iconsetIndex}`
+	local spritesheetPath = `spritesheets/{iconsetName}`
 	if not fs.isDir("spritesheets") then
 		fs.writeDir("spritesheets")
 	end
@@ -361,15 +352,15 @@ local function packIconsetSprites(iconsetIndex: string, cfg: Config): boolean
 		fs.writeDir(spritesheetPath)
 	end
 
-	createPackConfig(cfg, iconsetIndex)
+	createPackConfig(iconsetName)
 
 	local result = process.exec("java", {
 		"-cp",
 		"runnable-texturepacker.jar",
 		"com.badlogic.gdx.tools.texturepacker.TexturePacker",
-		`png/{iconsetIndex}`,
+		`png/{iconsetName}`,
 		spritesheetPath,
-		iconsetIndex,
+		iconsetName,
 	})
 
 	if not result.ok then
@@ -382,17 +373,16 @@ local function packIconsetSprites(iconsetIndex: string, cfg: Config): boolean
 end
 
 --- Applies alpha-bleeding to final spritesheets to fix dark edges
-local function alphaBleedSpritesheets(iconsetIndex: string): boolean
+local function alphaBleedSpritesheets(iconsetName: string): boolean
 	print(`\n{ANSI.CYAN}▸ {ANSI.BOLD}Alpha-Bleeding Spritesheets{ANSI.RESET}`)
 
-	local spritesheetDir = `spritesheets/{iconsetIndex}`
+	local spritesheetDir = `spritesheets/{iconsetName}`
 	local bleedCount = 0
 	local failCount = 0
 
 	for _, file in fs.readDir(spritesheetDir) do
 		if string.match(file, "%.png$") then
 			local filePath = `{spritesheetDir}/{file}`
-
 			local result = process.exec("alpha-bleed", { filePath, filePath })
 
 			if result.ok then
@@ -406,7 +396,9 @@ local function alphaBleedSpritesheets(iconsetIndex: string): boolean
 	end
 
 	if failCount > 0 then
-		print(`  {ANSI.YELLOW}⚠{ANSI.RESET} Alpha-bled {ANSI.BOLD}{bleedCount}{ANSI.RESET} {ANSI.RED}({failCount} failed){ANSI.RESET}`)
+		print(
+			`  {ANSI.YELLOW}⚠{ANSI.RESET} Alpha-bled {ANSI.BOLD}{bleedCount}{ANSI.RESET} {ANSI.RED}({failCount} failed){ANSI.RESET}`
+		)
 		return false
 	else
 		print(`  {ANSI.GREEN}✓{ANSI.RESET} Alpha-bled {ANSI.BOLD}{bleedCount}{ANSI.RESET} spritesheet(s)`)
@@ -415,10 +407,10 @@ local function alphaBleedSpritesheets(iconsetIndex: string): boolean
 end
 
 --- Compresses spritesheets using oxipng (lossless optimization)
-local function compressSpritesheets(iconsetIndex: string): CompressionStats
+local function compressSpritesheets(iconsetName: string): CompressionStats
 	print(`\n{ANSI.CYAN}▸ {ANSI.BOLD}Optimizing Images{ANSI.RESET}`)
 
-	local spritesheetDir = `spritesheets/{iconsetIndex}`
+	local spritesheetDir = `spritesheets/{iconsetName}`
 	local stats: CompressionStats = {
 		compressed = 0,
 		failed = 0,
@@ -458,10 +450,10 @@ local function compressSpritesheets(iconsetIndex: string): CompressionStats
 	return stats
 end
 
---- Parses libGDX atlas file to extract icon positions
-local function parseAtlasFile(atlasPath: string): { [string]: IconAtlasData }
+--- Parses libGDX atlas file to extract icon positions and spritesheet assignments
+local function parseAtlasFile(atlasPath: string): { [string]: { filename: string, x: number, y: number } }
 	local atlasContent = fs.readFile(atlasPath)
-	local iconData: { [string]: IconAtlasData } = {}
+	local iconData: { [string]: { filename: string, x: number, y: number } } = {}
 	local currentSpritesheet: string? = nil
 	local lastIconName: string? = nil
 
@@ -471,24 +463,21 @@ local function parseAtlasFile(atlasPath: string): { [string]: IconAtlasData }
 
 		if not isIndented then
 			if string.match(trimmed, "%.png$") then
-				-- Spritesheet filename
 				currentSpritesheet = trimmed
 			elseif trimmed ~= "" and currentSpritesheet then
-				-- Icon name
 				lastIconName = trimmed
 				iconData[trimmed] = {
-					decalId = currentSpritesheet,
-					xOffset = 0,
-					yOffset = 0,
+					filename = currentSpritesheet,
+					x = 0,
+					y = 0,
 				}
 			end
 		elseif string.match(trimmed, "^bounds:") and lastIconName then
-			-- Parse bounds: x, y, width, height
 			local x, y = string.match(trimmed, "bounds:%s*(%d+),%s*(%d+)")
 			if x and y then
-				local iconName = lastIconName :: string -- Type assertion
-				iconData[iconName].xOffset = tonumber(x) :: number
-				iconData[iconName].yOffset = tonumber(y) :: number
+				local iconName = lastIconName :: string
+				iconData[iconName].x = tonumber(x) :: number
+				iconData[iconName].y = tonumber(y) :: number
 			end
 		end
 	end
@@ -500,102 +489,101 @@ end
 -- ROBLOX ASSET UPLOAD
 --═══════════════════════════════════════════════════════════
 
-local function uploadSpritesheetToRoblox(filepath: string, displayName: string, cfg: Config, metadata: IconsetMetadata): string
-    print(`  {ANSI.DIM}Uploading {filepath}...{ANSI.RESET}`)
+--- Uploads a spritesheet to Roblox and returns the asset ID
+local function uploadSpritesheetToRoblox(filepath: string, displayName: string, metadata: IconsetMetadata): string
+	print(`  {ANSI.DIM}Uploading {filepath}...{ANSI.RESET}`)
 
-    -- Construct description
-    local description = `Iconset spreadsheet uploaded for use in Iconvault.\nName: {metadata.name}\nMade by {metadata.author} and licensed under {metadata.license.name}.`
+	local description = `Iconset spreadsheet uploaded for use in Iconvault.\n`
+		.. `Name: {metadata.name}\n`
+		.. `Made by {metadata.author} and licensed under {metadata.license.name}.`
 
-    -- Create the asset (returns decal ID)
-    local createResult = process.exec("rbxcloud", {
-        "assets",
-        "create",
-        "--asset-type",
-        "decal-png",
-        "--display-name",
-        displayName,
-        "--description",
-        description,
-        "--creator-id",
-        tostring(HOLDER_USER_ID),
-        "--creator-type",
-        "user",
-        "--filepath",
-        filepath,
-        "--api-key",
-        RBLX_API_KEY,
-    })
+	local createResult = process.exec("rbxcloud", {
+		"assets",
+		"create",
+		"--asset-type",
+		"decal-png",
+		"--display-name",
+		displayName,
+		"--description",
+		description,
+		"--creator-id",
+		tostring(HOLDER_USER_ID),
+		"--creator-type",
+		"user",
+		"--filepath",
+		filepath,
+		"--api-key",
+		RBLX_API_KEY,
+	})
 
-    if not createResult.ok then
-        error(`{ANSI.BG_RED} ERROR {ANSI.RESET} Failed to upload {filepath}:\n{createResult.stderr}`)
-    end
+	if not createResult.ok then
+		error(`{ANSI.BG_RED} ERROR {ANSI.RESET} Failed to upload {filepath}:\n{createResult.stderr}`)
+	end
 
-    -- Parse operation path from response
-    local responseData = serde.decode("json", createResult.stdout)
-    local operationPath = responseData.path or responseData.name or responseData.operation
+	-- Extract operation ID from response
+	local responseData = serde.decode("json", createResult.stdout)
+	local operationPath = responseData.path or responseData.name or responseData.operation
 
-    if not operationPath then
-        error(`{ANSI.BG_RED} ERROR {ANSI.RESET} No operation path returned from upload`)
-    end
+	if not operationPath then
+		error(`{ANSI.BG_RED} ERROR {ANSI.RESET} No operation path returned from upload`)
+	end
 
-    -- Extract operation ID from the path (format: "operations/{id}")
-    local operationId = string.match(operationPath, "operations/(.+)") :: string
-    if not operationId then
-        operationId = operationPath -- Fallback to using the entire path as ID
-    end
+	local operationId = string.match(operationPath, "operations/(.+)") :: string or operationPath
 
-    print(`  {ANSI.DIM}Waiting for upload to complete...{ANSI.RESET}`)
+	print(`  {ANSI.DIM}Waiting for upload to complete...{ANSI.RESET}`)
 
-    -- Poll for completion
-    local maxAttempts = 60
-    local attempts = 0
-    local assetId: string? = nil
+	-- Poll for completion
+	local maxAttempts = 60
+	local attempts = 0
+	local assetId: string? = nil
 
-    while attempts < maxAttempts do
-        task.wait(2.5)
-        attempts += 1
+	while attempts < maxAttempts do
+		task.wait(2.5)
+		attempts += 1
 
-        local statusResult = process.exec("rbxcloud", {
-            "assets",
-            "get-operation",
-            "--operation-id",
-            operationId, 
-            "--api-key",
-            RBLX_API_KEY,
-        })
+		local statusResult = process.exec("rbxcloud", {
+			"assets",
+			"get-operation",
+			"--operation-id",
+			operationId,
+			"--api-key",
+			RBLX_API_KEY,
+		})
 
-        if not statusResult.ok then
-            error(`{ANSI.BG_RED} ERROR {ANSI.RESET} Failed to check operation status:\n{statusResult.stderr}`)
-        end
+		if not statusResult.ok then
+			error(`{ANSI.BG_RED} ERROR {ANSI.RESET} Failed to check operation status:\n{statusResult.stderr}`)
+		end
 
-        local status = serde.decode("json", statusResult.stdout)
+		local status = serde.decode("json", statusResult.stdout)
 
-        if status.done then
-            if status.error then
-                error(`{ANSI.BG_RED} ERROR {ANSI.RESET} Asset upload failed:\n{serde.encode("json", status.error)}`)
-            end
+		if status.done then
+			if status.error then
+				error(`{ANSI.BG_RED} ERROR {ANSI.RESET} Asset upload failed:\n{serde.encode("json", status.error)}`)
+			end
 
-            -- Extract asset ID from response
-            assetId = status.response and status.response.assetId
+			assetId = status.response and status.response.assetId
 
-            if not assetId then
-                error(`{ANSI.BG_RED} ERROR {ANSI.RESET} No asset ID returned from completed operation`)
-            end
+			if not assetId then
+				error(`{ANSI.BG_RED} ERROR {ANSI.RESET} No asset ID returned from completed operation`)
+			end
 
-            print(`  {ANSI.GREEN}✓{ANSI.RESET} Uploaded as asset ID: {ANSI.BOLD}{assetId}{ANSI.RESET}`)
-            break
-        end
-    end
+			print(`  {ANSI.GREEN}✓{ANSI.RESET} Uploaded as asset ID: {ANSI.BOLD}{assetId}{ANSI.RESET}`)
+			break
+		end
+	end
 
-    if not assetId then
-        error(`{ANSI.BG_RED} ERROR {ANSI.RESET} Upload timed out after {maxAttempts * 2} seconds`)
-    end
+	if not assetId then
+		error(`{ANSI.BG_RED} ERROR {ANSI.RESET} Upload timed out after {maxAttempts * 2.5} seconds`)
+	end
 
-    return tostring(assetId)
+	return tostring(assetId)
 end
 
 --- Uploads all spritesheets for processed iconsets and returns filename -> assetId mapping
-local function uploadAllSpritesheets(iconsetNames: { string }, cfg: Config, iconsetData: { [string]: IconsetMetadata }): { [string]: string }
+local function uploadAllSpritesheets(
+	iconsetNames: { string },
+	iconsetData: { [string]: IconsetMetadata }
+): { [string]: string }
 	print(`\n{ANSI.CYAN}{ANSI.BOLD}▸ Uploading Spritesheets to Roblox{ANSI.RESET}`)
 
 	local assetIdMap: { [string]: string } = {}
@@ -621,13 +609,12 @@ local function uploadAllSpritesheets(iconsetNames: { string }, cfg: Config, icon
 					error(`{ANSI.BG_RED} ERROR {ANSI.RESET} No metadata found for {iconsetName}`)
 				end
 
-				local success, assetId = pcall(uploadSpritesheetToRoblox, filepath, displayName, cfg, metadata)
+				local success, assetId = pcall(uploadSpritesheetToRoblox, filepath, displayName, metadata)
 
 				if not success then
 					error(`{ANSI.BG_RED} ERROR {ANSI.RESET} Upload failed for {file}:\n{assetId}`)
 				end
 
-				-- Store mapping of filename to asset ID
 				assetIdMap[file] = assetId
 			end
 		end
@@ -644,29 +631,31 @@ end
 --═══════════════════════════════════════════════════════════
 
 --- Fetches iconset from Iconify and processes all icons
-local function processIconset(iconsetIndex: string, cfg: Config, existingMetadata: { [string]: IconsetMetadata }?): (IconsetMetadata?, boolean)
-	print(`\n{ANSI.BOLD}{ANSI.BLUE}▸ Processing:{ANSI.RESET} {ANSI.CYAN}{ANSI.BOLD}{iconsetIndex}{ANSI.RESET}`)
+local function processIconset(
+	iconsetName: string,
+	existingMetadata: { [string]: IconsetMetadata }?
+): (IconsetMetadata?, boolean)
+	print(`\n{ANSI.BOLD}{ANSI.BLUE}▸ Processing:{ANSI.RESET} {ANSI.CYAN}{ANSI.BOLD}{iconsetName}{ANSI.RESET}`)
 
-	local data, info, rootDefaults, allIcons, metadata
+	local data, info, allIcons, metadata
 
-	-- Step 1: Fetch icon data from Iconify to check if update is needed
-	if cfg.conditions.fetchIconData then
-		local url = string.format(ICONSET_BASE_URL, iconsetIndex)
+	-- Step 1: Fetch icon data from Iconify
+	if config.conditions.fetchIconData then
+		local url = string.format(ICONSET_BASE_URL, iconsetName)
 		data = fetchJson(url)
-		
+
 		-- Check if this iconset needs updating
-		if existingMetadata and existingMetadata[iconsetIndex] then
-			local existing = existingMetadata[iconsetIndex]
+		if existingMetadata and existingMetadata[iconsetName] then
+			local existing = existingMetadata[iconsetName]
 			local remoteLastModified = data.lastModified or 0
-			
-			-- Convert lastModified timestamp (Unix timestamp in seconds)
+
 			if type(remoteLastModified) == "number" and existing.lastUpdated == remoteLastModified then
 				print(`  {ANSI.YELLOW}⚠{ANSI.RESET} Iconset is up-to-date (last modified: {remoteLastModified})`)
 				print(`  {ANSI.DIM}Skipping processing...{ANSI.RESET}`)
-				return nil, true -- Return nil with skip flag
+				return nil, true
 			end
 		end
-		
+
 		info = data.info
 
 		print(`\n{ANSI.YELLOW}★ {ANSI.BOLD}Iconset Details{ANSI.RESET}`)
@@ -676,7 +665,7 @@ local function processIconset(iconsetIndex: string, cfg: Config, existingMetadat
 		print(`  Icons:   {ANSI.BOLD}{info.total}{ANSI.RESET}`)
 
 		-- Extract root-level defaults for icon dimensions
-		rootDefaults = {
+		local rootDefaults = {
 			width = data.width,
 			height = data.height,
 			left = data.left,
@@ -687,8 +676,8 @@ local function processIconset(iconsetIndex: string, cfg: Config, existingMetadat
 		allIcons = {}
 
 		if data.icons then
-			for iconName, iconData in pairs(data.icons) do
-				allIcons[iconName] = resolveIconDefaults(iconData, rootDefaults)
+			for name, iconData in pairs(data.icons) do
+				allIcons[name] = resolveIconDefaults(iconData, rootDefaults)
 			end
 		end
 
@@ -702,61 +691,67 @@ local function processIconset(iconsetIndex: string, cfg: Config, existingMetadat
 		end
 	else
 		print(`  {ANSI.YELLOW}⚠{ANSI.RESET} Skipped fetching icon data (disabled)`)
-		-- Initialize minimal metadata structure for skipped fetch
 		allIcons = {}
-		info = { name = iconsetIndex, total = 0, author = { name = "Unknown" }, license = { title = "Unknown", spdx = "Unknown" }, samples = {} }
+		info = {
+			name = iconsetName,
+			total = 0,
+			author = { name = "Unknown" },
+			license = { title = "Unknown", spdx = "Unknown" },
+			samples = {},
+		}
 		data = { lastModified = 0 }
 	end
 
-	ensureDirectories(iconsetIndex)
+	ensureDirectories(iconsetName)
 
 	-- Step 2: Generate SVG files for all icons
-	if cfg.conditions.generateSVG and cfg.conditions.fetchIconData then
+	if config.conditions.generateSVG and config.conditions.fetchIconData then
 		print(`\n{ANSI.CYAN}▸ {ANSI.BOLD}Generating SVG Files{ANSI.RESET}`)
 		for iconName, iconData in pairs(allIcons) do
-			local svgContent = generateSVG(iconData, cfg.defaultColor)
-			writeSVGFile(iconsetIndex, iconName, svgContent)
+			local svgContent = generateSVG(iconData, config.defaultColor)
+			writeSVGFile(iconsetName, iconName, svgContent)
 		end
 		local svgCount = countKeys(allIcons)
 		print(`  {ANSI.GREEN}✓{ANSI.RESET} Generated {ANSI.BOLD}{svgCount}{ANSI.RESET} SVG files`)
-	elseif not cfg.conditions.generateSVG then
+	elseif not config.conditions.generateSVG then
 		print(`\n{ANSI.YELLOW}⚠{ANSI.RESET} Skipped SVG generation (disabled)`)
 	end
 
 	-- Step 3: Convert SVG to PNG
-	local pngCount = 0
-	local pngFailedCount = 0
-	
-	if cfg.conditions.convertToPNG and cfg.conditions.generateSVG then
+	if config.conditions.convertToPNG and config.conditions.generateSVG then
 		print(`\n{ANSI.CYAN}▸ {ANSI.BOLD}Converting to PNG{ANSI.RESET}`)
-		print(`  {ANSI.DIM}Resolution: {cfg.iconRes}x{cfg.iconRes}px{ANSI.RESET}`)
+		print(`  {ANSI.DIM}Resolution: {config.iconRes}x{config.iconRes}px{ANSI.RESET}`)
+
+		local pngCount = 0
+		local pngFailedCount = 0
 
 		for iconName in pairs(allIcons) do
-			if convertSVGtoPNG(iconsetIndex, iconName, cfg.iconRes) then
+			if convertSVGtoPNG(iconsetName, iconName, config.iconRes) then
 				pngCount += 1
 			else
 				pngFailedCount += 1
 			end
 		end
 
-		-- Report conversion results
 		local svgCount = countKeys(allIcons)
 		if pngFailedCount > 0 then
-			print(`  {ANSI.YELLOW}⚠{ANSI.RESET} Converted {ANSI.BOLD}{pngCount}/{svgCount}{ANSI.RESET} {ANSI.RED}({pngFailedCount} failed){ANSI.RESET}`)
+			print(
+				`  {ANSI.YELLOW}⚠{ANSI.RESET} Converted {ANSI.BOLD}{pngCount}/{svgCount}{ANSI.RESET} {ANSI.RED}({pngFailedCount} failed){ANSI.RESET}`
+			)
 		else
 			print(`  {ANSI.GREEN}✓{ANSI.RESET} Converted all {ANSI.BOLD}{pngCount}{ANSI.RESET} files`)
 		end
-		
-		-- Clean up SVG files after successful conversion
-		if fs.isDir(`svg/{iconsetIndex}`) then
-			fs.removeDir(`svg/{iconsetIndex}`)
+
+		-- Clean up SVG files after conversion
+		if fs.isDir(`svg/{iconsetName}`) then
+			fs.removeDir(`svg/{iconsetName}`)
 			print(`  {ANSI.DIM}🗑️  Cleaned up SVG files{ANSI.RESET}`)
 		end
-	elseif not cfg.conditions.convertToPNG then
+	elseif not config.conditions.convertToPNG then
 		print(`\n{ANSI.YELLOW}⚠{ANSI.RESET} Skipped PNG conversion (disabled)`)
 	end
 
-	-- Build metadata structure with timestamps
+	-- Build metadata structure
 	local lastModified = data.lastModified or 0
 	if type(lastModified) ~= "number" then
 		lastModified = 0
@@ -776,23 +771,20 @@ local function processIconset(iconsetIndex: string, cfg: Config, existingMetadat
 		icons = {},
 	}
 
-	-- Initialize all icons with empty tables (will be populated during atlas parsing)
-	for iconName in pairs(allIcons) do
-		metadata.icons[iconName] = {}
-	end
-
 	return metadata, false
 end
 
 --- Processes multiple iconsets and generates sprite atlases
-local function processAllIconsets(iconsetNames: { string }, cfg: Config, existingMetadata: { [string]: IconsetMetadata }?): { [string]: IconsetMetadata }
+local function processAllIconsets(
+	iconsetNames: { string },
+	existingMetadata: { [string]: IconsetMetadata }?
+): { [string]: IconsetMetadata }
 	local results = {}
-	local processedNames = {}
 
 	for i, iconsetName in iconsetNames do
 		print(`\n{ANSI.DIM}[{i}/{#iconsetNames}]{ANSI.RESET}`)
 
-		local success, metadata, skipped = pcall(processIconset, iconsetName, cfg, existingMetadata)
+		local success, metadata, skipped = pcall(processIconset, iconsetName, existingMetadata)
 
 		if not success then
 			print(`{ANSI.RED}✗{ANSI.RESET} Failed: {iconsetName}`)
@@ -808,7 +800,6 @@ local function processAllIconsets(iconsetNames: { string }, cfg: Config, existin
 			continue
 		end
 
-		-- Type assertion: metadata is non-nil when not skipped
 		if not metadata then
 			print(`{ANSI.RED}✗{ANSI.RESET} Failed: {iconsetName} (no metadata returned)`)
 			continue
@@ -817,13 +808,13 @@ local function processAllIconsets(iconsetNames: { string }, cfg: Config, existin
 		local iconsetMetadata = metadata :: IconsetMetadata
 
 		-- Pack sprites into atlas
-		if cfg.conditions.packSprites then
-			if not packIconsetSprites(iconsetName, cfg) then
+		if config.conditions.packSprites then
+			if not packIconsetSprites(iconsetName) then
 				print(`  {ANSI.RED}✗{ANSI.RESET} Packing failed`)
 				continue
 			end
-			
-			-- Clean up PNG files after successful packing
+
+			-- Clean up PNG files after packing
 			if fs.isDir(`png/{iconsetName}`) then
 				fs.removeDir(`png/{iconsetName}`)
 				print(`  {ANSI.DIM}🗑️  Cleaned up PNG files{ANSI.RESET}`)
@@ -832,19 +823,21 @@ local function processAllIconsets(iconsetNames: { string }, cfg: Config, existin
 			print(`\n{ANSI.YELLOW}⚠{ANSI.RESET} Skipped sprite packing (disabled)`)
 		end
 
-		-- Apply alpha-bleeding to final spritesheets
-		if cfg.conditions.alphaBleed then
+		-- Apply alpha-bleeding
+		if config.conditions.alphaBleed then
 			alphaBleedSpritesheets(iconsetName)
 		else
 			print(`\n{ANSI.YELLOW}⚠{ANSI.RESET} Skipped alpha-bleeding (disabled)`)
 		end
 
-		-- Compress spritesheets if enabled
-		if cfg.conditions.compressImages then
+		-- Compress spritesheets
+		if config.conditions.compressImages then
 			local stats = compressSpritesheets(iconsetName)
 
 			if stats.failed > 0 then
-				print(`  {ANSI.YELLOW}⚠{ANSI.RESET} Optimized {ANSI.BOLD}{stats.compressed}{ANSI.RESET} {ANSI.RED}({stats.failed} failed){ANSI.RESET}`)
+				print(
+					`  {ANSI.YELLOW}⚠{ANSI.RESET} Optimized {ANSI.BOLD}{stats.compressed}{ANSI.RESET} {ANSI.RED}({stats.failed} failed){ANSI.RESET}`
+				)
 			else
 				local totalKB = math.floor(stats.totalSaved / 1024 * 10 + 0.5) / 10
 				print(`  {ANSI.GREEN}✓{ANSI.RESET} Saved {ANSI.BOLD}{totalKB} KB{ANSI.RESET} total`)
@@ -853,14 +846,91 @@ local function processAllIconsets(iconsetNames: { string }, cfg: Config, existin
 			print(`\n{ANSI.YELLOW}⚠{ANSI.RESET} Skipped image compression (disabled)`)
 		end
 
-		-- Store metadata for later processing
 		results[iconsetName] = iconsetMetadata
-		table.insert(processedNames, iconsetName)
-
 		print(`\n{ANSI.GREEN}{ANSI.BOLD}✓ {iconsetMetadata.name} processed!{ANSI.RESET}\n`)
 	end
 
 	return results
+end
+
+--═══════════════════════════════════════════════════════════
+-- METADATA FINALIZATION
+--═══════════════════════════════════════════════════════════
+
+--- Finalizes metadata by parsing atlas files and associating icons with asset IDs
+local function finalizeMetadata(
+	processedIconsets: { string },
+	iconsetData: { [string]: IconsetMetadata },
+	spritesheetAssetIds: { [string]: string }
+)
+	print(`\n{ANSI.CYAN}{ANSI.BOLD}▸ Finalizing Metadata{ANSI.RESET}\n`)
+
+	for _, iconsetName in processedIconsets do
+		local metadata = iconsetData[iconsetName]
+		local atlasPath = `spritesheets/{iconsetName}/{iconsetName}.atlas`
+
+		if not fs.isFile(atlasPath) then
+			print(`  {ANSI.YELLOW}⚠{ANSI.RESET} Atlas file not found for {iconsetName}`)
+			continue
+		end
+
+		print(`{ANSI.BOLD}{iconsetName}{ANSI.RESET}`)
+		local atlasData = parseAtlasFile(atlasPath)
+
+		local updatedCount = 0
+
+		for iconName, iconInfo in atlasData do
+			local spritesheetFilename = iconInfo.filename
+			local decalNumber: string
+
+			if config.conditions.uploadToRoblox then
+				local assetId = spritesheetAssetIds[spritesheetFilename]
+				if not assetId then
+					print(`  {ANSI.YELLOW}⚠{ANSI.RESET} No asset ID found for {spritesheetFilename}`)
+					continue
+				end
+				decalNumber = assetId
+			else
+				-- Use filename as placeholder when not uploading
+				decalNumber = spritesheetFilename
+			end
+
+			-- Initialize decal entry if it doesn't exist
+			if not metadata.icons[decalNumber] then
+				metadata.icons[decalNumber] = {}
+			end
+
+			-- Add icon position data
+			metadata.icons[decalNumber][iconName] = {
+				x = iconInfo.x,
+				y = iconInfo.y,
+			}
+
+			updatedCount += 1
+		end
+
+		print(`  {ANSI.GREEN}✓{ANSI.RESET} Mapped {ANSI.BOLD}{updatedCount}{ANSI.RESET} icons`)
+	end
+end
+
+--- Cleans up intermediate files after processing
+local function cleanupIntermediateFiles(processedIconsets: { string })
+	print(`\n{ANSI.CYAN}▸ {ANSI.BOLD}Cleaning Up{ANSI.RESET}`)
+
+	for _, iconsetName in processedIconsets do
+		if fs.isDir(`spritesheets/{iconsetName}`) then
+			fs.removeDir(`spritesheets/{iconsetName}`)
+		end
+	end
+
+	-- Remove empty parent directories
+	for _, dir in { "svg", "png", "spritesheets" } do
+		if fs.isDir(dir) and #fs.readDir(dir) == 0 then
+			fs.removeDir(dir)
+		end
+	end
+
+	print(`  {ANSI.GREEN}✓{ANSI.RESET} Removed all intermediate files`)
 end
 
 --═══════════════════════════════════════════════════════════
@@ -872,17 +942,19 @@ local function main()
 
 	print(`{ANSI.DIM}{divider}{ANSI.RESET}`)
 	print(`{ANSI.BOLD}{ANSI.PINK}🌠 ASTRALIS{ANSI.RESET}`)
-	print(`{ANSI.DIM}Automates converting icon sets from Iconify into PNG spreadsheets for use in Iconvault.{ANSI.RESET}`)
+	print(
+		`{ANSI.DIM}Automates converting icon sets from Iconify into PNG spreadsheets for use in Iconvault.{ANSI.RESET}`
+	)
 	print(`{ANSI.DIM}{divider}{ANSI.RESET}`)
 
 	-- Validate configuration and API key
 	validateConfig(config)
-	
+
 	if config.conditions.uploadToRoblox then
 		validateApiKey()
 		print(`{ANSI.GREEN}✓{ANSI.RESET} API key detected`)
 	end
-	
+
 	print(`{ANSI.GREEN}✓{ANSI.RESET} Configuration validated`)
 
 	-- Load existing metadata
@@ -899,7 +971,7 @@ local function main()
 	end
 
 	-- Process all iconsets
-	local iconsetData = processAllIconsets(config.iconsets, config, existingMetadata)
+	local iconsetData = processAllIconsets(config.iconsets, existingMetadata)
 
 	-- Merge with existing metadata to preserve skipped iconsets
 	if existingMetadata then
@@ -910,7 +982,7 @@ local function main()
 		end
 	end
 
-	-- Get list of actually processed iconsets (not skipped)
+	-- Get list of newly processed iconsets (not skipped)
 	local processedIconsets = {}
 	for iconsetName, metadata in iconsetData do
 		if metadata.lastRefreshed == START_TIMESTAMP then
@@ -918,70 +990,23 @@ local function main()
 		end
 	end
 
-	-- Upload spritesheets and get asset IDs (only for newly processed iconsets)
+	-- Upload spritesheets
 	local spritesheetAssetIds = {}
 	if config.conditions.uploadToRoblox and #processedIconsets > 0 then
-		spritesheetAssetIds = uploadAllSpritesheets(processedIconsets, config, iconsetData)
+		spritesheetAssetIds = uploadAllSpritesheets(processedIconsets, iconsetData)
 	elseif #processedIconsets == 0 then
 		print(`\n{ANSI.YELLOW}⚠{ANSI.RESET} No new iconsets to upload (all up-to-date)`)
 	else
 		print(`\n{ANSI.YELLOW}⚠{ANSI.RESET} Skipped Roblox upload (disabled)`)
 	end
 
-	-- Parse atlas files and update metadata with asset IDs
+	-- Finalize metadata
 	if config.conditions.generateMetadata and #processedIconsets > 0 then
-		print(`\n{ANSI.CYAN}{ANSI.BOLD}▸ Finalizing Metadata{ANSI.RESET}\n`)
-		for _, iconsetName in processedIconsets do
-			local metadata = iconsetData[iconsetName]
-			local atlasPath = `spritesheets/{iconsetName}/{iconsetName}.atlas`
+		finalizeMetadata(processedIconsets, iconsetData, spritesheetAssetIds)
 
-			if fs.isFile(atlasPath) then
-				print(`{ANSI.BOLD}{iconsetName}{ANSI.RESET}`)
-				local atlasData = parseAtlasFile(atlasPath)
-
-				local updatedCount = 0
-				for iconName, iconInfo in atlasData do
-					if metadata.icons[iconName] ~= nil then
-						-- Get asset ID for the spritesheet (if upload was enabled)
-						if config.conditions.uploadToRoblox then
-							local spritesheetFilename = iconInfo.decalId
-							local assetId = spritesheetAssetIds[spritesheetFilename]
-
-							if assetId then
-								-- Replace filename with rbxassetid
-								iconInfo.decalId = `rbxassetid://{assetId}`
-							else
-								print(`  {ANSI.YELLOW}⚠{ANSI.RESET} No asset ID found for {spritesheetFilename}`)
-							end
-						end
-
-						metadata.icons[iconName] = iconInfo
-						updatedCount += 1
-					end
-				end
-
-				print(`  {ANSI.GREEN}✓{ANSI.RESET} Mapped {ANSI.BOLD}{updatedCount}{ANSI.RESET} icons`)
-			else
-				print(`  {ANSI.YELLOW}⚠{ANSI.RESET} Atlas file not found for {iconsetName}`)
-			end
-		end
-		
-		-- Clean up spritesheets after metadata is finalized
+		-- Clean up intermediate files
 		if config.conditions.uploadToRoblox then
-			print(`\n{ANSI.CYAN}▸ {ANSI.BOLD}Cleaning Up{ANSI.RESET}`)
-			for _, iconsetName in processedIconsets do
-				if fs.isDir(`spritesheets/{iconsetName}`) then
-					fs.removeDir(`spritesheets/{iconsetName}`)
-				end
-			end
-			
-			-- Remove empty parent directories
-			for _, dir in { "svg", "png", "spritesheets" } do
-				if fs.isDir(dir) and #fs.readDir(dir) == 0 then
-					fs.removeDir(dir)
-				end
-			end
-			print(`  {ANSI.GREEN}✓{ANSI.RESET} Removed all intermediate files`)
+			cleanupIntermediateFiles(processedIconsets)
 		end
 	else
 		print(`\n{ANSI.YELLOW}⚠{ANSI.RESET} Skipped metadata generation (disabled or no new iconsets)`)
@@ -995,9 +1020,13 @@ local function main()
 	local skippedCount = #config.iconsets - processedCount
 
 	if processedCount == #config.iconsets then
-		print(`{ANSI.BG_GREEN}{ANSI.BOLD} ✓ SUCCESS {ANSI.RESET} {ANSI.GREEN}Processed all {ANSI.BOLD}{processedCount}{ANSI.RESET} {ANSI.GREEN}iconsets{ANSI.RESET}`)
+		print(
+			`{ANSI.BG_GREEN}{ANSI.BOLD} ✓ SUCCESS {ANSI.RESET} {ANSI.GREEN}Processed all {ANSI.BOLD}{processedCount}{ANSI.RESET} {ANSI.GREEN}iconsets{ANSI.RESET}`
+		)
 	elseif processedCount > 0 then
-		print(`{ANSI.BG_GREEN}{ANSI.BOLD} ✓ SUCCESS {ANSI.RESET} {ANSI.GREEN}Processed {ANSI.BOLD}{processedCount}{ANSI.RESET} {ANSI.GREEN}iconset(s){ANSI.RESET}`)
+		print(
+			`{ANSI.BG_GREEN}{ANSI.BOLD} ✓ SUCCESS {ANSI.RESET} {ANSI.GREEN}Processed {ANSI.BOLD}{processedCount}{ANSI.RESET} {ANSI.GREEN}iconset(s){ANSI.RESET}`
+		)
 		print(`{ANSI.CYAN}ℹ{ANSI.RESET} Skipped {ANSI.BOLD}{skippedCount}{ANSI.RESET} up-to-date iconset(s)`)
 	else
 		print(`{ANSI.BG_YELLOW}{ANSI.BOLD} ⚠ UP-TO-DATE {ANSI.RESET} {ANSI.YELLOW}All iconsets are current{ANSI.RESET}`)
@@ -1006,7 +1035,9 @@ local function main()
 	-- Save metadata to JSON
 	if totalIconsets > 0 and config.conditions.generateMetadata then
 		fs.writeFile("icons.json", serde.encode("json", iconsetData))
-		print(`{ANSI.GREEN}✓{ANSI.RESET} Saved metadata to {ANSI.BOLD}icons.json{ANSI.RESET} ({ANSI.BOLD}{totalIconsets}{ANSI.RESET} total iconset(s))`)
+		print(
+			`{ANSI.GREEN}✓{ANSI.RESET} Saved metadata to {ANSI.BOLD}icons.json{ANSI.RESET} ({ANSI.BOLD}{totalIconsets}{ANSI.RESET} total iconset(s))`
+		)
 	end
 
 	print(`{ANSI.DIM}{divider}{ANSI.RESET}\n`)
