@@ -120,8 +120,8 @@ local RBLX_API_KEY = process.env.RBLX_API_KEY
 local HOLDER_USER_ID = process.env.HOLDER_USER_ID
 
 local config: Config = {
-	packedRes = 1024, -- Spritesheet resolution (1024x1024)
-	iconRes = 128, -- Individual icon resolution (128x128)
+	packedRes = 1024, -- Spritesheet resolution
+	iconRes = 64, -- Individual icon resolution
 	defaultColor = "#FFFFFF", -- White base for runtime recoloring
 	iconsets = { "tabler", "majesticons" },
 
