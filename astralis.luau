@@ -101,6 +101,7 @@ type Config = {
 	defaultColor: string,
 	iconsets: { string },
 	conditions: ConfigConditions,
+	blacklistedWords: { string }
 }
 
 type CompressionStats = {
@@ -119,28 +120,22 @@ local START_TIMESTAMP = os.time()
 local RBLX_API_KEY = process.env.RBLX_API_KEY
 local HOLDER_USER_ID = process.env.HOLDER_USER_ID
 
-local config: Config = {
-	packedRes = 1024, -- Spritesheet resolution
-	iconRes = 64, -- Individual icon resolution
-	defaultColor = "#FFFFFF", -- White base for runtime recoloring
-	iconsets = { "tabler", "majesticons" },
-
-	-- Step conditions: Enable/disable specific pipeline steps
-	conditions = {
-		fetchIconData = true,
-		generateSVG = true,
-		convertToPNG = true,
-		packSprites = true,
-		alphaBleed = true,
-		compressImages = true,
-		uploadToRoblox = true,
-		generateMetadata = true,
-	},
-}
+local config: Config = require("./config")
 
 --═══════════════════════════════════════════════════════════
 -- UTILITY FUNCTIONS
 --═══════════════════════════════════════════════════════════
+
+--- Checks if an icon name contains any blacklisted words (case-insensitive)
+local function isIconBlacklisted(iconName: string, blacklist: { string }): boolean
+	local lowerName = string.lower(iconName)
+	for _, word in blacklist do
+		if string.find(lowerName, string.lower(word), 1, true) then
+			return true
+		end
+	end
+	return false
+end
 
 --- Validates that icons can be evenly packed into spritesheets
 local function validateConfig(cfg: Config)
@@ -157,17 +152,6 @@ local function validateApiKey()
 				.. `  Please set it with your Roblox Open Cloud API key.`
 		)
 	end
-end
-
---- Fetches and decodes JSON from a URL
-local function fetchJson(url: string): any
-	local response = net.request(url)
-
-	if not response.ok then
-		error(`{ANSI.BG_RED} ERROR {ANSI.RESET} HTTP {response.statusCode}: {response.statusMessage}`)
-	end
-
-	return serde.decode("json", response.body)
 end
 
 --- Creates necessary directory structure for an iconset
@@ -193,15 +177,6 @@ local function countKeys(tbl: { [any]: any }): number
 		count += 1
 	end
 	return count
-end
-
---- Loads existing icons.json if it exists
-local function loadExistingMetadata(): { [string]: IconsetMetadata }?
-	if fs.isFile("icons.json") then
-		local content = fs.readFile("icons.json")
-		return serde.decode("json", content)
-	end
-	return nil
 end
 
 --═══════════════════════════════════════════════════════════
@@ -265,11 +240,6 @@ local function generateSVG(iconData: IconData, defaultColor: string): string
 	return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="{viewBox}" width="{iconData.width}" height="{iconData.height}">{body}</svg>`
 end
 
---- Writes SVG content to disk
-local function writeSVGFile(iconsetName: string, iconName: string, svgContent: string)
-	fs.writeFile(`svg/{iconsetName}/{iconName}.svg`, svgContent)
-end
-
 --- Converts SVG to PNG using resvg rasterizer
 local function convertSVGtoPNG(iconsetName: string, iconName: string, iconRes: number): boolean
 	local svgPath = `svg/{iconsetName}/{iconName}.svg`
@@ -296,8 +266,21 @@ end
 -- SPRITE PACKING
 --═══════════════════════════════════════════════════════════
 
---- Creates libGDX TexturePacker configuration file
-local function createPackConfig(iconsetName: string)
+--- Packs PNG icons into sprite atlas using libGDX TexturePacker
+local function packIconsetSprites(iconsetName: string): boolean
+	print(`\n{ANSI.CYAN}▸ {ANSI.BOLD}Packing Sprites{ANSI.RESET}`)
+	print(`  {ANSI.DIM}Creating sprite atlas...{ANSI.RESET}`)
+
+	-- Ensure output directory exists
+	local spritesheetPath = `spritesheets/{iconsetName}`
+	if not fs.isDir("spritesheets") then
+		fs.writeDir("spritesheets")
+	end
+	if not fs.isDir(spritesheetPath) then
+		fs.writeDir(spritesheetPath)
+	end
+
+	-- Create pack config inline
 	local packConfig = {
 		pot = false,
 		paddingX = 0,
@@ -336,23 +319,6 @@ local function createPackConfig(iconsetName: string)
 	}
 
 	fs.writeFile(`png/{iconsetName}/pack.json`, serde.encode("json", packConfig))
-end
-
---- Packs PNG icons into sprite atlas using libGDX TexturePacker
-local function packIconsetSprites(iconsetName: string): boolean
-	print(`\n{ANSI.CYAN}▸ {ANSI.BOLD}Packing Sprites{ANSI.RESET}`)
-	print(`  {ANSI.DIM}Creating sprite atlas...{ANSI.RESET}`)
-
-	-- Ensure output directory exists
-	local spritesheetPath = `spritesheets/{iconsetName}`
-	if not fs.isDir("spritesheets") then
-		fs.writeDir("spritesheets")
-	end
-	if not fs.isDir(spritesheetPath) then
-		fs.writeDir(spritesheetPath)
-	end
-
-	createPackConfig(iconsetName)
 
 	local result = process.exec("java", {
 		"-cp",
@@ -642,7 +608,13 @@ local function processIconset(
 	-- Step 1: Fetch icon data from Iconify
 	if config.conditions.fetchIconData then
 		local url = string.format(ICONSET_BASE_URL, iconsetName)
-		data = fetchJson(url)
+		
+		-- Fetch JSON inline
+		local response = net.request(url)
+		if not response.ok then
+			error(`{ANSI.BG_RED} ERROR {ANSI.RESET} HTTP {response.statusCode}: {response.statusMessage}`)
+		end
+		data = serde.decode("json", response.body)
 
 		-- Check if this iconset needs updating
 		if existingMetadata and existingMetadata[iconsetName] then
@@ -677,17 +649,31 @@ local function processIconset(
 
 		if data.icons then
 			for name, iconData in pairs(data.icons) do
-				allIcons[name] = resolveIconDefaults(iconData, rootDefaults)
+				-- Check blacklist before adding
+				if not isIconBlacklisted(name, config.blacklistedWords) then
+					allIcons[name] = resolveIconDefaults(iconData, rootDefaults)
+				end
 			end
 		end
 
 		if data.aliases then
 			for aliasName, aliasData in pairs(data.aliases) do
-				local resolved = resolveAlias(aliasName, aliasData, data.icons, rootDefaults)
-				if resolved then
-					allIcons[aliasName] = resolved
+				-- Check blacklist before processing alias
+				if not isIconBlacklisted(aliasName, config.blacklistedWords) then
+					local resolved = resolveAlias(aliasName, aliasData, data.icons, rootDefaults)
+					if resolved then
+						allIcons[aliasName] = resolved
+					end
 				end
 			end
+		end
+		
+		local filteredCount = countKeys(allIcons)
+		local totalCount = info.total
+		local blacklistedCount = totalCount - filteredCount
+		
+		if blacklistedCount > 0 then
+			print(`  {ANSI.YELLOW}⚠{ANSI.RESET} Filtered out {ANSI.BOLD}{blacklistedCount}{ANSI.RESET} blacklisted icon(s)`)
 		end
 	else
 		print(`  {ANSI.YELLOW}⚠{ANSI.RESET} Skipped fetching icon data (disabled)`)
@@ -709,7 +695,8 @@ local function processIconset(
 		print(`\n{ANSI.CYAN}▸ {ANSI.BOLD}Generating SVG Files{ANSI.RESET}`)
 		for iconName, iconData in pairs(allIcons) do
 			local svgContent = generateSVG(iconData, config.defaultColor)
-			writeSVGFile(iconsetName, iconName, svgContent)
+			-- Write SVG inline
+			fs.writeFile(`svg/{iconsetName}/{iconName}.svg`, svgContent)
 		end
 		local svgCount = countKeys(allIcons)
 		print(`  {ANSI.GREEN}✓{ANSI.RESET} Generated {ANSI.BOLD}{svgCount}{ANSI.RESET} SVG files`)
@@ -759,7 +746,7 @@ local function processIconset(
 
 	metadata = {
 		name = info.name,
-		iconCount = info.total,
+		iconCount = countKeys(allIcons), -- Use filtered count
 		author = info.author.name,
 		license = {
 			name = info.license.title,
@@ -957,8 +944,13 @@ local function main()
 
 	print(`{ANSI.GREEN}✓{ANSI.RESET} Configuration validated`)
 
-	-- Load existing metadata
-	local existingMetadata = loadExistingMetadata()
+	-- Load existing metadata inline
+	local existingMetadata: { [string]: IconsetMetadata }? = nil
+	if fs.isFile("icons.json") then
+		local content = fs.readFile("icons.json")
+		existingMetadata = serde.decode("json", content)
+	end
+	
 	if existingMetadata then
 		local existingCount = countKeys(existingMetadata)
 		print(`{ANSI.CYAN}ℹ{ANSI.RESET} Loaded existing metadata ({ANSI.BOLD}{existingCount}{ANSI.RESET} iconset(s))`)
