@@ -10,7 +10,7 @@ return {
 
 	-- Step conditions: Enable/disable specific pipeline steps (usually only needed for debug)
 	conditions = {
-		fetchIconData = false,
+		fetchIconData = true,
 		generateSVG = true,
 		convertToPNG = true,
 		packSprites = true,
