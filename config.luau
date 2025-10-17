@@ -32,6 +32,7 @@ return {
     -- List of words which if detected in an icon name will automatically be skipped.
     -- Those are mostly brand names pulled from Tabler, with a notable omission of programming languages and tooling.
     blacklistedWords = {
+        -- Brands
         "4chan", "airbnb", "airtable", "alipay",
         "amazon", "among-us", "android",
         "ao3", "apple", "asana",
@@ -90,6 +91,8 @@ return {
         "xamarin", "xing", "yahoo", "yandex",
         "yarn", "ycombinator", "youtube", "zalando",
         "zapier", "zeit", "zhihu",
-        "zulip", "zwift"
+        "zulip", "zwift",
+        -- Other words
+        "partner"
     }
 }
