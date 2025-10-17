@@ -126,14 +126,19 @@ local config: Config = require("./config")
 -- UTILITY FUNCTIONS
 --═══════════════════════════════════════════════════════════
 
---- Checks if an icon name contains any blacklisted words (case-insensitive)
+--- Checks if an icon name contains any blacklisted words as complete segments
 local function isIconBlacklisted(iconName: string, blacklist: { string }): boolean
 	local lowerName = string.lower(iconName)
+	
 	for _, word in blacklist do
-		if string.find(lowerName, string.lower(word), 1, true) then
-			return true
+		local lowerWord = string.lower(word)
+		for segment in string.gmatch(lowerName, "[^-_]+") do
+			if segment == lowerWord then
+				return true
+			end
 		end
 	end
+	
 	return false
 end
 
