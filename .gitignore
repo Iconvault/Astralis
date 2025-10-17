@@ -1,7 +1,6 @@
 # Ignore development resources
 .luaurc
 selene.toml
-icons.json
 
 # Ignore folders, made during conversion
 png/
