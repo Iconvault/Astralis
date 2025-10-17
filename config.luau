@@ -93,6 +93,10 @@ return {
         "zapier", "zeit", "zhihu",
         "zulip", "zwift",
         -- Other words
-        "partner"
+        "partner", "smoke", "smoking", "cigarette", "vape", "tobacco",
+        "joint", "weed", "marijuana", "cannabis", "bong",
+        "sex", "nude", "naked", "condom", "kiss", "couple", "intimate", "erotic",
+        "alcohol", "beer", "wine", "vodka", "champagne", "cocktail", "bar",
+        "devil", "demon", "hell", "curse", "sin",
     }
 }
