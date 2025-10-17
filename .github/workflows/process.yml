@@ -3,8 +3,8 @@ name: Process Iconsets
 on:
   workflow_dispatch:
   schedule:
-    # Runs every Saturday at 00:00 EST (05:00 UTC)
-    - cron: '0 5 * * 6'
+    # Runs twice daily at 00:00 UTC and 12:00 UTC
+    - cron: '0 0,12 * * *'
 
 jobs:
   process-icons:
