@@ -6,7 +6,16 @@ return {
     -- Color which the icons will have if no color data is available
 	defaultColor = "#FFFFFF",
     -- Iconsets to be processed
-	iconsets = { "tabler" },
+	iconsets = {
+        "material-symbols", -- Google Material Symbols (non-light)
+        "ic", -- Google Material Icons
+        "tabler", -- Tabler
+        "mingcute", -- Mingcute
+        "lucide", -- Lucide
+        "lucide-lab", -- Lucide Lab
+        "uil", -- Unicons
+        "uim", -- Unicons Monochrome
+    },
 
 	-- Step conditions: Enable/disable specific pipeline steps (usually only needed for debug)
 	conditions = {
