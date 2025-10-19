@@ -67,7 +67,7 @@ jobs:
           echo "Cleaning up TexturePacker..."
           rm -f runnable-texturepacker.jar
 
-      - name: Wait 10 minutes (scheduled runs only)
+      - name: Wait 15 minutes (scheduled runs only)
         if: github.event_name == 'schedule'
         run: |
           echo "Waiting 15 minutes before pushing to main... (Moderation purposes)"
